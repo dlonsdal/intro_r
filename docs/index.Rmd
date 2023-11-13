@@ -74,9 +74,7 @@ In today's session, we will aim to build on the material covered in the pre-sess
 
 This document is designed to provide you with notes of the session and be a handy resource when you come to revision. There are examples of code and the corresponding output from <TT>R</TT> as we go along.  
 
-## Accessing <TT>R</TT> and <TT>RStudio</TT> on a University computer <img align="centre" height="50" src="R.png"/> 
-
-
+## Accessing <TT>R</TT> and <TT>RStudio</TT> on a University computer 
 
 The two key tools for this session will be <TT>R</TT> and <TT>RStudio</TT>. These are free, open source pieces of software. They are both available on the University computers, but you may choose to download them onto your personal laptop or home computer.
 
