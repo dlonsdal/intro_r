@@ -2587,6 +2587,10 @@ library(tidyverse)</code></pre>
 <div id="plotting-with-ggplot2" class="section level1">
 <h1>Plotting with <TT>ggplot2</TT></h1>
 <p>We are going to plot with <TT>ggplot2</TT>. This is a powerful graphics framework that is extensively used by the R community - meaning there is lots of help out there! With <TT>ggplot2</TT>, we build a plot in stages, using different commands. <TT>ggplot2</TT> is loaded from the <TT>library()</TT> when you call <TT>tidyverse()</TT>. If you wanted to work with just <TT>ggplot2</TT> at some other time then call it from the library with <TT>library(ggplot2)</TT>.</p>
+<div id="workaround-for-stats4-server-not-running-ggplot" class="section level4">
+<h4>Workaround for stats4 server not running ggplot</h4>
+<p>While the IT team fix the stats4 server, you can run the following line of code to make the plotting function work.</p>
+<pre class="r"><code>options(bitmapType=&#39;cairo&#39;)</code></pre>
 <p>First of all we initialise <TT>ggplot2</TT> with <TT>ggplot2(data= , aes(x= , y=))</TT>. Hopefully it is self explanatory what we will put in the <TT>data=</TT>, <TT>x=</TT> and <TT>y=</TT> positions. Then we have to tell <TT>ggplot2</TT> what kind of plot we want. Here is an example:</p>
 <pre class="r"><code>ggplot(data=amox, aes(x=time, y=conc))+
   geom_point()</code></pre>
@@ -2634,6 +2638,7 @@ Figure 3: Simple scatter plot with lines between data points for each ID
 <li>Plot data for <em>just</em> <TT>ID==A</TT></li>
 <li>Plot each individual</li>
 </ul>
+</div>
 </div>
 
 

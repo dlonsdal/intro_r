@@ -294,14 +294,25 @@ OK. Now to have some fun with data visualisation. You are used to clicking with 
 # Plotting with <TT>ggplot2</TT>
   
 We are going to plot with <TT>ggplot2</TT>. This is a powerful graphics framework that is extensively used by the R community - meaning there is lots of help out there! With <TT>ggplot2</TT>, we build a plot in stages, using different commands. <TT>ggplot2</TT> is loaded from the <TT>library()</TT> when you call <TT>tidyverse()</TT>. If you wanted to work with just <TT>ggplot2</TT> at some other time then call it from the library with <TT>library(ggplot2)</TT>.  
+
+#### Workaround for stats4 server not running ggplot
+
+While the IT team fix the stats4 server, you can run the following line of code to make the plotting function work.
+
+```{r,eval=FALSE}
+options(bitmapType='cairo')
+```
   
 First of all we initialise <TT>ggplot2</TT> with <TT>ggplot2(data= , aes(x= , y=))</TT>. Hopefully it is self explanatory what we will put in the <TT>data=</TT>, <TT>x=</TT> and <TT>y=</TT> positions. Then we have to tell <TT>ggplot2</TT> what kind of plot we want. Here is an example:  
+
 ```{r,echo=FALSE}
 
 theme_set(theme(text = element_text(size=9)))
 ```
 
+
 ```{r scatt2,fig.width=4.5,fig.height=2.5,fig.align = 'center', fig.cap="Simple scatter plot"}
+
 ggplot(data=amox, aes(x=time, y=conc))+
   geom_point()
 ```
