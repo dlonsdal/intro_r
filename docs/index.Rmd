@@ -58,7 +58,7 @@ In today's session, we will aim to build on the material covered in the pre-sess
 * Understand the different windows in the <TT>RStudio</TT> desktop
 * Make and save an  <TT>R</TT> script
 * Undertake some basic calculations using  <TT>R</TT>
-* Set the  <TT>R</TT> working directory using  <TT>setwd()</TT>
+* Create a directory and set the <TT>R</TT> working directory using  <TT>setwd()</TT>
 * Import a .csv data file into  <TT>R</TT> 
 * View a data frame
 * Describe the difference between 'long' and 'wide' data formats and which is used for pharmacokinetic modelling
@@ -82,7 +82,7 @@ The two key tools for this session will be <TT>R</TT> and <TT>RStudio</TT>. Thes
 
 When you are using a University computer, you need to access <TT>RStudio</TT> via the University servers.
 
-The link for this is [here](https://stats3.sgul.ac.uk/rstudio).  Please note that the IT team are setting up a new link for this, if you find the first link does not work, please try [this](https://stats4.sgul.ac.uk/rstudio-stats3/) instead.
+The link for this is [here](https://stats4.sgul.ac.uk/rstudio).
 
 # Some basics in <TT>R</TT>
 Open <TT>RStudio</TT> and then open a new <TT>R</TT> script by clicking on the plus page in the top left hand corner of the <TT>RStudio</TT> window. You are now ready to start writing an <TT>R</TT> script. Try doing some simple maths and running the code by clicking '<TT>Run</TT>' or pressing <TT>ctrl+enter</TT> (<TT>cmd+enter if using a Mac</TT>).
@@ -120,61 +120,71 @@ CAL #show 'CAL' data frame in R console.
 
 <br>
 
-## Setting the working directory and importing a csv file  
+## Creating a directory, setting the working directory and importing a csv file  
 
-When you start to use <TT>R</TT>, you will often need to import data to analyse. For this session, we are going to use some pharmacokinetic data that can be downloaded from Canvas - 'amoxicillin.csv'. 
-  
-When working on a project in <TT>R</TT>, it is standard practice to navigate to the folder that your data is in using the  <TT>setwd()</TT> function. This tells <TT>R</TT> the directory you want to work in. Everything you save in your <TT>R</TT> session will by default be saved in the working directory (although this default can be overridden). If you want to import a csv file, we will use the function <TT>read.csv()</TT>. 
+When working on a project in <TT>R</TT>, it is standard practice to navigate to a folder where you want to create and store your work for the piece of work you are doing. 
 
-Before undertaking the next section, I strongly recommend that you make a folder on your personal (H:) drive to contain all your work for this module. I recommend _against_ using spaces in the name (this sometimes causes problems). You might make a folder called 'intro_pk'. Inside that folder you might have a folder for each bit of work you do. Please note that you _cannot_ use your Onedrive when using RStudio on the University server (annoying I know). 
-
-You can <TT>setwd()</TT>  using your mouse and clicking on 'session' and 'set working directory'. Alternatively (and more rapidly), you can use <TT>R</TT> code and the <TT>setwd()</TT> function.
-
-<br>
+You can check what folder R is currently working in by using the the folder that your data is in using the <TT>getwd()</TT> function. Run this now to see where your current folder is
 
 ``` {r,eval=FALSE, results='hold', tidy=FALSE}
   
-setwd()
-setwd("INSERT YOUR FILE PATH HERE")
-# or if on the server setwd("~/intro_pk/intro_R/")
+getwd()
+
+# you will see an output that includes your username. This is your 'H:' drive on the University computers
 ```
 
-<br>
+Let's create a folder for today's session. Let's call it 'intro_r'
 
-If you ever want to check the current working directory you can use the function <TT>getwd()</TT> and you can check the contents of your working directory using <TT>list.files()</TT>
+``` {r,eval=FALSE, results='hold', tidy=FALSE}
+  
+dir.create("intro_r")
 
-<br>
+```
 
-``` {r, eval=TRUE,results='hold'}
+If you now run the following:
+
+``` {r,eval=FALSE, results='hold', tidy=FALSE}
 list.files()
-# remember your output will depend on what you have in your folder
 ```
 
-<br>
+You will see that the new folder has been created. If you click on File explorer you will see this folder has been created within your H: drive. 
+
+We now need to move R to work in this folder. W
+
+``` {r,eval=FALSE, results='hold', tidy=FALSE}
+  
+setwd("intro_r")
+
+```
+
+You can also <TT>setwd()</TT>  using your mouse and clicking on 'session' and 'set working directory'.
+
+I recommend you now click save and save your <TT>R</TT> script in this folder so you can come back to it later. You might use a name like 'firstrscript.r'. Whatever you choose, use the file extension '.r'.
+
+### Import the data 
+
+Let's get some PK data in to work with. I have put the data set on canvas for you but you can also call it straight from my Github using the following command:
+
+``` {r,eval=TRUE, results='hold', tidy=FALSE}
+  
+amox<- read.csv("https://raw.githubusercontent.com/dlonsdal/SGUL_PK_data/main/amoxicillin.csv")
+
+```
+
 
 **Task:** 
 
-* Set the working directory and check it has worked by running <TT>list.files()</TT>
+* Create a new directory and check it has worked by running <TT>list.files()</TT>
+* Set your working directory to this new folder
+* Import the data from Github
 
-* Now download the .csv file 'amoxicillin.csv' and place it in your working directory (drag and drop in windows)
 
-* Run <TT>list.files()</TT> again and check that the the amoxicillin file now appears
+## Inspect the data
 
-## Save your <TT>R</TT> script 
-When you make an <TT>R</TT>  script, you often do so because you want to be able to reproduce work. It's therefore a good idea to save your script! You can do this using the <TT>RStudio</TT>  user interface (click file and save as). <TT>R</TT> script file has '.r' at the end of the file name e.g. <TT>script.r</TT> .  
 
-<br>
-
-## Load a data file from the working directory
-Ok, now we will import the amoxicillin.csv file from the working directory into <TT>R</TT>  so we can have a look at the data and start to work with it. For this, we will use the function <TT>read.csv</TT>. Remember that we need to store it as an object wih <TT><-</TT>.
-``` {r, eval=TRUE}
-amox<-read.csv("amoxicillin.csv") 
-#note, for some systems you need to include the option 'header =TRUE' 
-#e.g. amox<-read.csv("amoxicillin.csv", header = TRUE)
-```
 If you click on the arrow by the amox object in your environment tab in RStudio, you will see that 'amox' contains 30 observations of 3 variables. An <TT>ID</TT>  variable, <TT>time</TT>  which is an integer value and <TT>conc</TT>  which contains numbers.  
 
-This dataset is a simulated pharmacokinetic experiment. Six participants were give an IV bolus (given very fast) of 1000 mg of amoxicillin and plasma concentrations were measured every 2 hours for 8 hours. 8 hours is a standard dosing interval for amoxicillin.    
+This data set is a simulated pharmacokinetic experiment. Six participants were give an IV bolus (given very fast) of 1000 mg of amoxicillin and plasma concentrations were measured every 2 hours for 8 hours. 8 hours is a standard dosing interval for amoxicillin.    
 
 There are some handy, built in <TT>R</TT> functions that you can use to have a look at the data.
 
@@ -187,7 +197,7 @@ amox[15,] # looks at row 15
 amox[,2] # looks at column 2
 ```
 <br>
-**Task:** Save your <TT>R</TT>  script and load in the amoxicillin dataset. Have a look at the dataset.   
+**Task:** Inspect the data   
 
 # Long and wide data  
 ## Long data  
@@ -242,21 +252,24 @@ summary(amox)
 <bc>
 
 Here, the three variables in the amoxicillin data set are summarised. It's a start, but we can do some more interesting things. To do this, we need to use one of the many available 'packages' that <TT>R</TT> has to offer. Packages are groups of functions (and some times datasets for you to use and learn with) that have been developed by the <TT>R</TT> community. Packages bring in new functions for us to use with our data. 
-# Calling a package from the <TT>R</TT> library  
-I suggest you start by using the <TT>tidyverse</TT>, which is acually a selection of useful packages that are automatically included when you install <TT>R</TT>. When you want to use something like this, you have to call it from the <TT>R library</TT> of packages with the function <TT>library()</TT>. 
 
-Please note, if you are undertaking this work on your own personal computer, you will need to download packages before you use them. This is done with the <TT>install.packages()</TT> function (e.g. <TT>install.packages('tidyverse')</TT>). If you are using <TT>RStudio</TT> on the server, I have downloaded all the packages that you need for this course, but you will have to tell <TT>R</TT> where to find them before you can call them with the <TT>library()</TT> function. To do this you will need to run the following code: <TT>.libPaths( c(.libPaths(), "/homes/dlonsdale-pharmacokinetics/sghms/bms/shares/Advanced-Pharmacokinetics/4.4.1/library"))</TT>
+# Calling a package from the <TT>R</TT> library
+<TT>R</TT> is a little bit like an empty laboratory. You can do _some_ useful things in it (like light a bunsen burner and heat something up) but if you want to do more advanced analytics you need to bring in some additional equipment (like an organ bath). In <TT>R</TT> these additional bits of kit are called 'packages'.
+
+I suggest you start by using  <TT>tidyverse</TT>, which is actually a selection of useful packages. When you want to use something like this, you have to call it from the <TT>R library</TT> of packages with the function <TT>library()</TT>. 
+
+Please note, if you are undertaking this work on your own personal computer, you will need to download packages before you use them. This is done with the <TT>install.packages()</TT> function (e.g. <TT>install.packages('tidyverse')</TT>). If you are using <TT>RStudio</TT> on the server, I have downloaded all the packages that you need for this course, but you will have to tell <TT>R</TT> where to find them before you can call them with the <TT>library()</TT> function. To do this you will need to run the following code: <TT>.libPaths( c(.libPaths(), "/homes/dlonsdale-pharmacokinetics/sghms/bms/shares/Advanced-Pharmacokinetics/4.4.2/library"))</TT>
 
 For example:  
 ```{r, eval=FALSE}
 .libPaths( c( .libPaths(),
-              "/homes/dlonsdale-pharmacokinetics/sghms/bms/shares/Advanced-Pharmacokinetics/4.4.1/library") )
+              "/homes/dlonsdale-pharmacokinetics/sghms/bms/shares/Advanced-Pharmacokinetics/4.4.2/library") )
 #note that you need the '.' before 'libPaths'
 
 library(tidyverse)
 ```
 
-**Note** that if you are using RStudio on the stats3 server you _can_ download packages yourself by using <TT>install.packages()</TT> but this downloads the package to your personal hard drive and there is a limited amount of space on this so I recommend against doing this. 
+**Note** that if you are using RStudio on the stats4 server you _can_ download packages yourself by using <TT>install.packages()</TT> but this downloads the package to your personal hard drive and there is a limited amount of space on this so I recommend against doing this. 
 
 # Summarising data with <TT>summarise()</TT> function, using piping <TT>%>%</TT> and estimating $C_{max}$
 
@@ -293,16 +306,8 @@ OK. Now to have some fun with data visualisation. You are used to clicking with 
   
 # Plotting with <TT>ggplot2</TT>
   
-We are going to plot with <TT>ggplot2</TT>. This is a powerful graphics framework that is extensively used by the R community - meaning there is lots of help out there! With <TT>ggplot2</TT>, we build a plot in stages, using different commands. <TT>ggplot2</TT> is loaded from the <TT>library()</TT> when you call <TT>tidyverse()</TT>. If you wanted to work with just <TT>ggplot2</TT> at some other time then call it from the library with <TT>library(ggplot2)</TT>.  
+We are going to plot with <TT>ggplot2</TT>. This is a powerful graphics framework that is extensively used by the <TT>R</TT> community - meaning there is lots of help out there! With <TT>ggplot2</TT>, we build a plot in stages, using different commands. <TT>ggplot2</TT> is loaded from the <TT>library()</TT> when you call <TT>tidyverse()</TT>. If you wanted to work with just <TT>ggplot2</TT> at some other time then call it from the library with <TT>library(ggplot2)</TT>.  
 
-#### Workaround for stats4 server not running ggplot
-
-While the IT team fix the stats4 server, you can run the following line of code to make the plotting function work.
-
-```{r,eval=FALSE}
-options(bitmapType='cairo')
-```
-  
 First of all we initialise <TT>ggplot2</TT> with <TT>ggplot2(data= , aes(x= , y=))</TT>. Hopefully it is self explanatory what we will put in the <TT>data=</TT>, <TT>x=</TT> and <TT>y=</TT> positions. Then we have to tell <TT>ggplot2</TT> what kind of plot we want. Here is an example:  
 
 ```{r,echo=FALSE}
