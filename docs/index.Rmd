@@ -3,23 +3,24 @@ title: "Introduction to visualising pharmacokinetic data using '<TT>R</TT>'"
 output:
   bookdown::html_document2:
     fig_caption : TRUE
-    number_sections: no
+    number_sections: yes
     toc: yes
     toc_float: yes
-
+    fig_num_by_section: TRUE
+    css: "style.css"
+    global_numbering: true  
+    
 header-includes:
-  - \usepackage{colortbl}
-  - \usepackage{multirow}
-  - \usepackage{float}
+
   - \floatplacement{figure}{H}
   - \floatplacement{table}{H}
-  - \usepackage{booktabs}
-  - \usepackage{caption}
+
   - \captionsetup{labelfont=bf,margin=12pt} 
   - \newcommand{\blandscape}{\begin{landscape}}
   - \newcommand{\elandscape}{\end{landscape}}
 ---
 
+```{=html}
 <style>
 h1.title {
   font-size: 48px;
@@ -32,6 +33,8 @@ h4.author {
 body {
 text-align: justify}
 </style>
+```
+
 
 <center><img src="PK.png"/></center>
 
@@ -44,21 +47,20 @@ library(kableExtra)
 
 # Introduction 
 
-In this session you will be introduced to the practical side of pharmacokinetics - with a data workshop. You will be introduced to '<TT>R</TT>': a language and environment for statistical computing and its parter programme 'RStudio', which provides a handy user interface for '<TT>R</TT>'.
+In this session you will be introduced to the practical side of pharmacokinetics - with a data workshop. You will be introduced to '<TT>R</TT>': a language and environment for statistical computing and its partner programme 'RStudio', which provides a handy user interface for '<TT>R</TT>'.
 
-We will use '<TT>R</TT>' to undertake visualisation of pharmacokinetic data using the '<TT>R</TT>' package '<TT>ggplot2</TT>'. We will also estimate an important pharmacokinetic parameter ($C_{max}$) associated with the time concentration profile of an IV-bolus dose of a drug.
+We will use '<TT>R</TT>' to undertake visualisation of pharmacokinetic data using the '<TT>R</TT>' package '<TT>ggplot2</TT>'. We will use <TT>R</TT> to summarise some pharmacokinetic data to give us an important measure of exposure - the maximum drug concentration  ($C_{max}$).
 
-This session has been designed to progress your knowledge of pharmacokinetics and give you an introduction into the world of using code to analyse, visualise and communicate with data - skills that the drug development industry consistently tell us they need from graduates.
+This session has been designed to progress your knowledge of pharmacokinetics and give you an introduction into the world of using code to analyse, visualise and communicate with data - skills that the drug development industry consistently tell us they need from graduates. Although we are using <TT>R</TT> for pharmacokinetic data, the software can be used in any field of data analysis. Similarly, if you are already used to coding with another language (like <TT>Python</TT>), feel free to explore the data from this session using whichever language you prefer.
 
 ## Learning outcomes  
 
-In today's session, we will aim to build on the material covered in the pre-session unit on Canvas. By the end of this week you should be able to:  
   
+* Define the important pharmacokinetic measures of drug exposure $C_{max}$, $T_{max}$, and $AUC$
 * Access <TT>R</TT> and <TT>RStudio</TT> onto your own computer or a University PC
 * Understand the different windows in the <TT>RStudio</TT> desktop
 * Make and save an  <TT>R</TT> script
 * Undertake some basic calculations using  <TT>R</TT>
-* Create a directory and set the <TT>R</TT> working directory using  <TT>setwd()</TT>
 * Import a .csv data file into  <TT>R</TT> 
 * View a data frame
 * Describe the difference between 'long' and 'wide' data formats and which is used for pharmacokinetic modelling
@@ -74,6 +76,200 @@ In today's session, we will aim to build on the material covered in the pre-sess
 
 This document is designed to provide you with notes of the session and be a handy resource when you come to revision. There are examples of code and the corresponding output from <TT>R</TT> as we go along.  
 
+# Important pharmacokinetic measures of drug exposure 
+
+## $C_{max}$, $T_{max}$, and $AUC$ definitions {.tabset .tabset-fade}
+
+As we go through the pharmacokinetics learning on this course, you will become increasingly familiar with some terms that are used to quantitatively describe drug exposure. Three key measures are:
+
+* $C_{max}$ - the maximum plasma concentration observed after a dose of drug is administered
+* $T_{max}$ - the time at which the maximum plasma concentration of a drug is observed
+* $AUC$ - the area under the plasma time-concentration curve
+
+
+### Task {-}
+
+Below is a time concentration plot. Identify $C_{max}$, $T_{max}$, and $AUC$.
+
+``` {r pk-task,eval=TRUE,echo=FALSE, fig.cap='Time-concentration profile with some measures of exposure indicated'}
+
+
+# 1. Generate simulated oral PK data (slower absorption)
+time <- seq(0, 24, by = 0.1)
+ka <- 0.4  
+ke <- 0.2  
+dose <- 1000
+V <- 15
+conc <- (dose * ka / (V * (ka - ke))) * (exp(-ke * time) - exp(-ka * time))
+
+pk_data <- data.frame(time, conc)
+
+# 2. Define the specific time period for the shaded AUC
+auc_end_time <- 12
+auc_data <- subset(pk_data, time >= 0 & time <= auc_end_time)
+
+# 3. Build the clean plot
+ggplot(pk_data, aes(x = time, y = conc)) +
+  
+  # Shade the partial AUC using greyscale
+  #geom_ribbon(data = auc_data, aes(ymin = 0, ymax = conc), fill = "grey75") +
+  
+  # Plot the main curve
+  geom_line(linewidth = 1, color = "black") +
+  
+  theme_classic(base_size = 12) +
+  labs(
+       x = "Time (hours)",
+       y = "Concentration (mg/L)") +
+  
+  # Snap the AUC shading to the bottom axis
+  scale_y_continuous(expand = expansion(mult = c(0, 0.1))) +
+  
+  # Standardize the x-axis breaks
+  scale_x_continuous(expand = expansion(mult = c(0, 0.05)),
+                     breaks = seq(0, 24, by = 6))
+```
+
+
+
+### Solution {-}
+
+Below is a time concentration plot. $C_{max}$, $T_{max}$, and $AUC$ are indicated.
+
+
+``` {r pk-curve,eval=TRUE,echo=FALSE, fig.cap='Time-concentration profile with some measures of exposure indicated'}
+
+library(ggplot2)
+library(dplyr)
+
+# 1. Generate simulated oral PK data with SLOWER absorption
+time <- seq(0, 24, by = 0.1)
+ka <- 0.4  # Decreased from 1.2 to 0.4 for slower absorption
+ke <- 0.2  
+dose <- 1000
+V <- 15
+conc <- (dose * ka / (V * (ka - ke))) * (exp(-ke * time) - exp(-ka * time))
+
+pk_data <- data.frame(time, conc)
+
+# 2. Extract Cmax and Tmax
+cmax <- max(pk_data$conc)
+tmax <- pk_data$time[which.max(pk_data$conc)]
+
+# 3. Define the specific time period for the AUC
+auc_end_time <- 12
+auc_data <- subset(pk_data, time >= 0 & time <= auc_end_time)
+
+# 4. Build the plot
+ggplot(pk_data, aes(x = time, y = conc)) +
+  
+  # Shade the partial AUC using greyscale
+  geom_ribbon(data = auc_data, aes(ymin = 0, ymax = conc), fill = "grey75") +
+  
+  # Plot the main curve
+  geom_line(linewidth = 1, color = "black") +
+  
+  # Draw singular dashed lines
+  annotate("segment", x = 0, xend = tmax, y = cmax, yend = cmax, linetype = "dashed", color = "black") +
+  annotate("segment", x = tmax, xend = tmax, y = 0, yend = cmax, linetype = "dashed", color = "black") +
+  
+  # Mark the intersection
+  annotate("point", x = tmax, y = cmax, color = "black", size = 3) +
+  
+  # Add text labels using parse = TRUE to render mathematical subscripts
+  annotate("text", x = tmax + 0.5, y = cmax+ 0.5, label = "bold(C[max])", parse = TRUE, color = "black", hjust = 0, size = 5) +
+  annotate("text", x = tmax + 0.5, y = cmax * 0.05, label = "bold(T[max])", parse = TRUE, color = "black", hjust = 0, size = 5) +
+  annotate("text", x = auc_end_time -5, y = cmax / 3, label = "bold(AUC[0-12])", parse = TRUE, color = "black", size = 5) +
+  
+  theme_classic(base_size = 12) +
+  labs(
+       x = "Time (hours)",
+       y = "Concentration (mg/L)") +
+  
+  # Snap the AUC shading to the bottom axis
+  scale_y_continuous(expand = expansion(mult = c(0, 0.1))) +
+  
+  # Inject the exact Tmax value into the x-axis breaks
+  scale_x_continuous(expand = expansion(mult = c(0, 0.05)),
+                     breaks = sort(unique(c(seq(0, 24, by = 6), round(tmax, 1)))))
+
+```
+
+Note that in \@ref(fig:pk-curve) the $AUC$ is referenced to a specific time. Here I have shown $AUC_{0-12}$ hours. You might have chosen $AUC_{0-24}$. Common time periods include a dosing interval and in some circumstances an estimate of total exposure to a single dose of a drug, which comes with the notation $AUC_{0-\infty}$.
+
+### IV and oral plots compared {-}
+
+```{r pk-curve-comparison, eval=TRUE, echo=FALSE, fig.cap='Time-concentration profiles with measures of exposure indicated for (a) Intravenous bolus and (b) Oral administration.', fig.width=10, fig.height=4.5, fig.align='center', warning=FALSE, message=FALSE}
+
+library(ggplot2)
+library(dplyr)
+library(patchwork) # The modern replacement for fig.subcap
+
+# --- GLOBAL PARAMETERS ---
+time <- seq(0, 24, by = 0.1)
+dose <- 1000
+V <- 15
+ke <- 0.2  
+ka <- 0.4  
+auc_end_time <- 12
+
+# ==========================================
+# 1. INTRAVENOUS (IV) BOLUS PLOT
+# ==========================================
+conc_iv <- (dose / V) * exp(-ke * time)
+iv_data <- data.frame(time, conc = conc_iv)
+
+cmax_iv <- max(iv_data$conc)
+tmax_iv <- iv_data$time[which.max(iv_data$conc)] 
+auc_iv_data <- subset(iv_data, time >= 0 & time <= auc_end_time)
+
+plot_iv <- ggplot(iv_data, aes(x = time, y = conc)) +
+  geom_ribbon(data = auc_iv_data, aes(ymin = 0, ymax = conc), fill = "grey75") +
+  geom_line(linewidth = 1, color = "black") +
+  annotate("point", x = tmax_iv, y = cmax_iv, color = "black", size = 3) +
+  annotate("text", x = 0.5, y = cmax_iv, label = "bold(C[max])", parse = TRUE, color = "black", hjust = 0, size = 5) +
+  annotate("text", x = 0.5, y = cmax_iv * 0.1, label = "bold(T[max])", parse = TRUE, color = "black", hjust = 0, size = 5) +
+  annotate("text", x = auc_end_time - 8, y = cmax_iv / 3, label = "bold(AUC[0-12])", parse = TRUE, color = "black", size = 5) +
+  theme_classic(base_size = 12) +
+  labs(x = "Time (hours)", y = "Concentration (mg/L)") +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.1)), limits = c(0, 70)) +
+  scale_x_continuous(expand = expansion(mult = c(0, 0.05)), breaks = seq(0, 24, by = 6))
+
+# ==========================================
+# 2. ORAL ADMINISTRATION PLOT
+# ==========================================
+conc_oral <- (dose * ka / (V * (ka - ke))) * (exp(-ke * time) - exp(-ka * time))
+oral_data <- data.frame(time, conc = conc_oral)
+
+cmax_oral <- max(oral_data$conc)
+tmax_oral <- oral_data$time[which.max(oral_data$conc)]
+auc_oral_data <- subset(oral_data, time >= 0 & time <= auc_end_time)
+
+plot_oral <- ggplot(oral_data, aes(x = time, y = conc)) +
+  geom_ribbon(data = auc_oral_data, aes(ymin = 0, ymax = conc), fill = "grey75") +
+  geom_line(linewidth = 1, color = "black") +
+  annotate("segment", x = 0, xend = tmax_oral, y = cmax_oral, yend = cmax_oral, linetype = "dashed", color = "black") +
+  annotate("segment", x = tmax_oral, xend = tmax_oral, y = 0, yend = cmax_oral, linetype = "dashed", color = "black") +
+  annotate("point", x = tmax_oral, y = cmax_oral, color = "black", size = 3) +
+  annotate("text", x = tmax_oral + 0.5, y = cmax_oral + 2, label = "bold(C[max])", parse = TRUE, color = "black", hjust = 0, size = 5) +
+  annotate("text", x = tmax_oral + 0.5, y = cmax_oral * 0.1, label = "bold(T[max])", parse = TRUE, color = "black", hjust = 0, size = 5) +
+  annotate("text", x = auc_end_time - 5, y = cmax_oral / 3, label = "bold(AUC[0-12])", parse = TRUE, color = "black", size = 5) +
+  theme_classic(base_size = 12) +
+  labs(x = "Time (hours)", y = "Concentration (mg/L)") +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.1)), limits = c(0, 70)) +
+  scale_x_continuous(expand = expansion(mult = c(0, 0.05)),
+                     breaks = sort(unique(c(seq(0, 24, by = 6), round(tmax_oral, 1)))))
+
+# ==========================================
+# 3. STITCH AND AUTO-TAG
+# ==========================================
+# This one line replaces fig.subcap, out.width, fig.show, and fig.ncol
+plot_iv + plot_oral + plot_annotation(tag_levels = 'a')
+```
+
+
+# Introducing <TT>R</TT> and <TT>RStudio</TT>
+
 ## Accessing <TT>R</TT> and <TT>RStudio</TT> on a University computer 
 
 The two key tools for this session will be <TT>R</TT> and <TT>RStudio</TT>. These are free, open source pieces of software. They are both available on the University computers, but you may choose to download them onto your personal laptop or home computer.
@@ -82,9 +278,20 @@ The two key tools for this session will be <TT>R</TT> and <TT>RStudio</TT>. Thes
 
 When you are using a University computer, you need to access <TT>RStudio</TT> via the University servers.
 
-The link for this is [here](https://stats4.sgul.ac.uk/rstudio).
+If you are *onsite*, you can use <https://shms-stats4.city.ac.uk/>. You will then need to login with your 'city.ac.uk' email address and password. 
 
-# Some basics in <TT>R</TT>
+If you are trying to access *offsite*, you cannot directly go to this web address. First you need to login to the virtual desktop. There are some instructions on how to do this [here](https://studenthub.citystgeorges.ac.uk/student-support-services/it-services/city-virtual-desktop#accordion858419-how-do-i-access-cvd?). 
+
+A video with me showing you this (captioned) is below.
+
+<video width="100%" controls>
+  <source src="Accessing R_default.mp4" type="video/mp4">
+  <track src="captions.vtt" kind="captions" srclang="en" label="English" default>
+</video>
+
+
+## Some basics in <TT>R</TT> {.tabset .tabset-fade}
+
 Open <TT>RStudio</TT> and then open a new <TT>R</TT> script by clicking on the plus page in the top left hand corner of the <TT>RStudio</TT> window. You are now ready to start writing an <TT>R</TT> script. Try doing some simple maths and running the code by clicking '<TT>Run</TT>' or pressing <TT>ctrl+enter</TT> (<TT>cmd+enter if using a Mac</TT>).
 <br>
 
@@ -114,70 +321,50 @@ CAL<-data.frame(mon,a)
 CAL #show 'CAL' data frame in R console.
 ```
 
-<br>
 
-**Task:** Run through some basic calculations in R, store a vector of numbers and see if you can work out how to raise this to a power (e.g. square it).  
+### Some basic tasks {.tabset .tabset-fade}
 
-<br>
+#### Task {-}
 
-## Creating a directory, setting the working directory and importing a csv file  
+Run through some basic calculations in R, store a vector of numbers and see if you can work out how to raise this to a power (e.g. square it).  
 
-When working on a project in <TT>R</TT>, it is standard practice to navigate to a folder where you want to create and store your work for the piece of work you are doing. 
+#### Solution {-}
 
-You can check what folder R is currently working in by using the the folder that your data is in using the <TT>getwd()</TT> function. Run this now to see where your current folder is
-
-``` {r,eval=FALSE, results='hold', tidy=FALSE}
-  
-getwd()
-
-# you will see an output that includes your username. This is your 'H:' drive on the University computers
+``` {r,eval=TRUE,  tidy=FALSE}
+b<- c(1,2,3,4) # stores a sequence of numbers (could also use b<- seq(4))
+b # displays the numbers
+b^3 # takes the cube of each number in the vector
 ```
 
-Let's create a folder for today's session. Let's call it 'intro_r'
 
-``` {r,eval=FALSE, results='hold', tidy=FALSE}
-  
-dir.create("intro_r")
+## Saving your script 
 
-```
+The reason that you write all of your code in a 'script' is so that you can come back to it and re-use it (and/or edit it and/or copy bits of it for another project). 
 
-If you now run the following:
+To save an R-script, click on the save icon and save your file. **You must save is as a '.r' file**. For example 'year1session1.r'. Video of me doing this is below. 
 
-``` {r,eval=FALSE, results='hold', tidy=FALSE}
-list.files()
-```
 
-You will see that the new folder has been created. If you click on File explorer you will see this folder has been created within your H: drive. 
+A video with me showing you this is below.
 
-We now need to move R to work in this folder. W
+<video width="100%" controls>
+  <source src="save.mp4" type="video/mp4">
+</video>
 
-``` {r,eval=FALSE, results='hold', tidy=FALSE}
-  
-setwd("intro_r")
+### More advanced - saving to a particular folder
 
-```
+If you want to create a new folder to store your scripts and work in. You can create a new folder and save you script there, but you should ideally then change the 'working directory' to the folder you created (so that anything else you save also goes there). 
 
-You can also <TT>setwd()</TT>  using your mouse and clicking on 'session' and 'set working directory'.
+You can either do that using the <TT>setwd()</TT> fuction or you can click 'Session' at the top of your screen then 'Set working directory' then 'to source file location'.
 
-I recommend you now click save and save your <TT>R</TT> script in this folder so you can come back to it later. You might use a name like 'firstrscript.r'. Whatever you choose, use the file extension '.r'.
+# Import and inspect some pharmacokinetic data
 
-### Import the data 
-
-Let's get some PK data in to work with. I have put the data set on canvas for you but you can also call it straight from my Github using the following command:
+Let's get some PK data in to work with. I store all my data for learning on my GitHub pages. You can call this directly into <TT>R</TT> by running the following:
 
 ``` {r,eval=TRUE, results='hold', tidy=FALSE}
   
 amox<- read.csv("https://raw.githubusercontent.com/dlonsdal/SGUL_PK_data/main/amoxicillin.csv")
 
 ```
-
-
-**Task:** 
-
-* Create a new directory and check it has worked by running <TT>list.files()</TT>
-* Set your working directory to this new folder
-* Import the data from Github
-
 
 ## Inspect the data
 
@@ -197,10 +384,10 @@ amox[15,] # looks at row 15
 amox[,2] # looks at column 2
 ```
 <br>
-**Task:** Inspect the data   
+**Task:** Inspect the data yourself   
 
-# Long and wide data  
-## Long data  
+## Long and wide data  
+### Long data  
 You can also look at the data by clicking on 'amox' in the global environment. RStudio will show you the data table. What do you think about the format (Table \@ref(tab:long))?  
   
 ```{r long, echo=F}
@@ -213,7 +400,7 @@ It's pretty 'long' and unwieldy isnt it! Whilst this is not very easy for us to 
 
 If you want to look at data in another way, for example by Time or by ID you can use <TT>R</TT> to do this to rearrange the data. 
 
-## Wide data  
+### Wide data  
 
 ```{r time,echo=F}
 amox %>%
@@ -235,15 +422,15 @@ amox %>%
 
 Tables \@ref(tab:time)&\@ref(tab:ID) are examples of data in wide format. They are perhaps a little more intuitive to read, but they are not so easy for a program like <TT>R</TT> to manipulate.  
   
-# Checking data for anomalies  
+## Checking data for anomalies  
 One habit to get into when you are working with data is checking that the data for anomalies. This ensures that you have imported into <TT>R</TT> correctly and that there are no problems in the data base. In the setting of a study or trial, any anomalies you notice in a database should be raised as a 'data query'. 
 
 There are lots of ways to check data. Where data frames are small, like  Tables \@ref(tab:time)&\@ref(tab:ID), you can inspect them visually and check that each participant has the right number of values and check that there are no obvious anomalies. Wide data frames may be easier to undertake visual inspections as you get one row per participant or sample time. Another common thing to do is to plot continuous variables and look for outliers, we will have a look at plotting data in the next section. <TT>R</TT> has some in built functions that can be helpful in checking data.  
   
-## Using <TT>R</TT> to check for anomalies  
+### Using <TT>R</TT> to check for anomalies  
 There are lots of ways you can use <TT>R</TT> to check data. Here are a few ideas.  
 
-### <TT>summary()</TT> function 
+#### <TT>summary()</TT> function 
 
 ```{r}
 summary(amox)
@@ -254,57 +441,109 @@ summary(amox)
 Here, the three variables in the amoxicillin data set are summarised. It's a start, but we can do some more interesting things. To do this, we need to use one of the many available 'packages' that <TT>R</TT> has to offer. Packages are groups of functions (and some times datasets for you to use and learn with) that have been developed by the <TT>R</TT> community. Packages bring in new functions for us to use with our data. 
 
 # Calling a package from the <TT>R</TT> library
+
 <TT>R</TT> is a little bit like an empty laboratory. You can do _some_ useful things in it (like light a bunsen burner and heat something up) but if you want to do more advanced analytics you need to bring in some additional equipment (like an organ bath). In <TT>R</TT> these additional bits of kit are called 'packages'.
 
 I suggest you start by using  <TT>tidyverse</TT>, which is actually a selection of useful packages. When you want to use something like this, you have to call it from the <TT>R library</TT> of packages with the function <TT>library()</TT>. 
 
-Please note, if you are undertaking this work on your own personal computer, you will need to download packages before you use them. This is done with the <TT>install.packages()</TT> function (e.g. <TT>install.packages('tidyverse')</TT>). If you are using <TT>RStudio</TT> on the server, I have downloaded all the packages that you need for this course, but you will have to tell <TT>R</TT> where to find them before you can call them with the <TT>library()</TT> function. To do this you will need to run the following code: <TT>.libPaths( c(.libPaths(), "/homes/dlonsdale-pharmacokinetics/sghms/bms/shares/Advanced-Pharmacokinetics/4.4.2/library"))</TT>
+Please note, if you are undertaking this work on your own personal computer, you will need to download packages before you use them. This is done with the <TT>install.packages()</TT> function (e.g. <TT>install.packages('tidyverse')</TT>). If you are using <TT>RStudio</TT> on the server, I have downloaded all the packages that you need for this course, but you will have to tell <TT>R</TT> where to find them before you can call them with the <TT>library()</TT> function. To do this you will need to run the following code: <TT>.libPaths(c(.libPaths(),"/homedirs8/shms/workshops/Dagan/"))</TT>
 
 For example:  
 ```{r, eval=FALSE}
-.libPaths( c( .libPaths(),
-              "/homes/dlonsdale-pharmacokinetics/sghms/bms/shares/Advanced-Pharmacokinetics/4.4.2/library") )
+.libPaths(c(.libPaths(),"/homedirs8/shms/workshops/Dagan/"))
 #note that you need the '.' before 'libPaths'
 
 library(tidyverse)
 ```
 
-**Note** that if you are using RStudio on the stats4 server you _can_ download packages yourself by using <TT>install.packages()</TT> but this downloads the package to your personal hard drive and there is a limited amount of space on this so I recommend against doing this. 
+**Note** that if you are using RStudio on the stats4 server you _can_ download packages yourself by using <TT>install.packages()</TT> but this process is quite slow so I recommend doing it in advance of sessions rather than during it. 
 
 # Summarising data with <TT>summarise()</TT> function, using piping <TT>%>%</TT> and estimating $C_{max}$
 
 We will use the <TT>summarise()</TT> function (note this is different from <TT>summary()</TT>). Stick <TT>summarise()</TT> into help in your <TT>RStudio</TT> help tab and look at the options that <TT>summarise()</TT> gives you. If you scroll down, you will see some 'useful functions' and, at the bottom, it gives you some examples of the function in use. You will see here that there are some funny '<TT>%>%</TT>' symbols. This is known as piping. 
 
-Piping is a tool that allows us to undertake multiple logical steps to achieve a desired output in our text. Technically, <TT>%>%</TT> is found in the <TT>magrittr()</TT> package, but when you load <TT>tidyverse()</TT> , <TT>magrittr()</TT> is automatically loaded.  
+Piping is a tool that allows us to undertake multiple logical steps to achieve a desired output in our text. It effectively means 'and then'. 
 
-Let's say we wanted to check the maximum concentration in our dataset made sense, to check for outliers. If we apply <TT>summarise(amox,max(conc))</TT> we are given `r summarise(amox,max(conc))`. This is the same output as from <TT>summary()</TT>, above. What if we want to know the maximum concentration for each ID number. Well, we can do this with piping.
+Technically, <TT>%>%</TT> is found in the <TT>magrittr()</TT> package, but when you load <TT>tidyverse()</TT> , <TT>magrittr()</TT> is automatically loaded.  
+
+Let's say we wanted to check the maximum concentration in our dataset made sense, to check for outliers. If we apply <TT>summarise(amox,max(conc))</TT> we are given `r summarise(amox,max(conc))%>% pull()`. This is the same output as from <TT>summary()</TT>, above. What if we want to know the maximum concentration for each ID number. Well, we can do this with piping.
 
 ```{r, echo=FALSE}
 library(tidyverse)
 ```
 
-```{r, results='hold', message==FALSE, warning=FALSE}
+Lets build this in steps. First lets just take the maximum concentration observed from all participants in the study.
+
+```{r, results='hold', message=FALSE, warning=FALSE}
+
 amox%>%
-  group_by(ID)%>%
   summarise(max(conc))
-# here we tell R to take 'amox', group by 'ID' then give the min conc
+# here we tell R to take the dataset amox 'and then' (the piping, %>% command) return the maximum value of the conc variable
 ```
 
-Now you can see the maximum value for each ID. In pharmacokinetics, the maximum value is known as $C_{max}$. This is an important pharmacokinetic parameter as sometimes, $C_{max}$, the peak drug concentration, influences effect (either desired or adverse). We can build our <TT>summarise()</TT> function to be a bit more powerful. For example:
+You can see that by default <TT>R</TT> labels this new value with the command used to create it (max(conc)). We can change the label for this new value:
+
+```{r, results='hold', message=FALSE, warning=FALSE}
+
+amox%>%
+  summarise(Maximum_concentration=max(conc))
+# here we tell R to take the dataset amox 'and then' return a new variable called 'Maximum_concentration' which we ask is the value of the 'conc' variable within the amox dataset.
+```
+
+Knowing the highest concentration of the whole group is of limited value. We really want to know the maximum value from each participant. We can do this by adding another step - a 'grouping' step.
 
 ```{r, results='hold', message=FALSE, warning=FALSE}
 amox%>%
   group_by(ID)%>%
-  summarise(min(conc),median(conc), max(conc),IQR(conc))
+  summarise(CMax=max(conc))
+# here we tell R to take 'amox' and then group by 'ID' and then give the max conc per ID.
+# the new variable is called 'CMax'
+```
+
+Now you can see the maximum value for each ID. In pharmacokinetics, the maximum value is known as $C_{max}$. This is an important pharmacokinetic parameter as sometimes, $C_{max}$, the peak drug concentration, influences effect (either desired or adverse). We can build our <TT>summarise()</TT> function to be a bit more powerful. For example we can also pull out $C_{min}$ (the minimum observed concentration) at the same time:
+
+```{r, results='hold', message=FALSE, warning=FALSE}
+amox%>%
+  group_by(ID)%>%
+  summarise(Cmin=min(conc),CMax=max(conc))
+```
+
+$C_{min}$ is usually described in the context of multiple doses of a drug. It is used to describe the minimum concentration in the plasma prior to the next dose being taken. 
+
+## Summarising data tasks {.tabset .tabset-fade}
+
+First check that you can replicate what I have produced in the examples. Then have a go at the tasks below.
+
+### Task {-}
+
+1. Use an additional %>% piping step to calculate the mean $C_{max}$
+2. Summarise the data by sample time, rather than ID. What are the max, min and mean concentration at each sample time? Do any stand out as outliers?
+
+### Solution {-}
+
+1. Use an additional %>% piping step to calculate the mean $C_{max}$
+2. Summarise the data by sample time, rather than ID. What are the max, min and mean concentration at each sample time? Do any stand out as outliers?
+
+```{r, results='hold', message=FALSE, warning=FALSE}
+amox%>%
+  group_by(ID)%>%
+  summarise(CMax=max(conc)) %>% 
+  summarise(mean_CMax=mean(CMax))
 ```
 
 
-**Task:** use <TT>summarise()</TT> to summarise by sample time, rather than ID. What are the maximum, minimum and mean concentrations at each sample time? Do any stand out as outliers?  
+```{r, results='hold', message=FALSE, warning=FALSE}
+amox%>%
+  group_by(time)%>%
+  summarise(min(conc),max(conc), mean(conc))
+```
+
+  
 
 # Plotting data   
 OK. Now to have some fun with data visualisation. You are used to clicking with a user interface in excel or SPSS. I am going to show you how make plots with  <TT>R</TT> code. Why bother? Well, you can make awesome, customisable plot code and then when you have a new data set, you just copy and paste the code, change the variables and hey presto, rapid plotting without having to point and click.  
   
-# Plotting with <TT>ggplot2</TT>
+## Plotting with <TT>ggplot2</TT>
   
 We are going to plot with <TT>ggplot2</TT>. This is a powerful graphics framework that is extensively used by the <TT>R</TT> community - meaning there is lots of help out there! With <TT>ggplot2</TT>, we build a plot in stages, using different commands. <TT>ggplot2</TT> is loaded from the <TT>library()</TT> when you call <TT>tidyverse()</TT>. If you wanted to work with just <TT>ggplot2</TT> at some other time then call it from the library with <TT>library(ggplot2)</TT>.  
 
@@ -324,12 +563,17 @@ ggplot(data=amox, aes(x=time, y=conc))+
 
 Hey presto! this is what concentration-time data from an IV-bolus dose of a drug looks like!
 
-<br>
+## Plotting tasks {.tabset .tabset-fade}
 
-**Task:** Reproduce this plot for yourselves. See if you can work out how to add customised labels for the axes and a title for the plot. What about some lines?  
+### Task {-}
 
-<br>
+Reproduce the plot for yourselves. See if you can work out how to add customised labels for the axes and a title for the plot. What about some lines?  
 
+### Solution {-}
+
+Reproduce the plot for yourselves. See if you can work out how to add customised labels for the axes and a title for the plot. What about some lines?  
+
+I am going to go through the solution in a couple of steps.
 
 ```{r linebad,fig.width=4.5,fig.height=2.5,fig.align = 'center', fig.cap="Plot with labels and an attempt at adding lines between points"}
 ggplot(data=amox, aes(x=time, y=conc))+
@@ -339,6 +583,7 @@ ggplot(data=amox, aes(x=time, y=conc))+
   ggtitle("Amoxicillin PK data")+
   geom_line()
 ```
+
 Mmmmm, the labels work fine but the line is a bit odd! Why is this? Well, ggplot has to be told exactly what to do, we have told it to draw a line, so it has drawn a line connecting all data points. What we really want to do is draw lines by <TT>ID</TT>. To do this we tell <TT>ggplot2()</TT> to group the data.  
   
 ```{r lineok,fig.width=4.5,fig.height=2.5,fig.align = 'center', fig.cap="Simple scatter plot with lines between data points for each ID"}
@@ -349,13 +594,155 @@ ggplot(data=amox, aes(x=time, y=conc, group=ID))+ #note the group goes up here
   ggtitle("Amoxicillin PK data")+
   geom_line()
 ```  
-Mmmmm, it is still a bit ugly though.
 
-**Tasks:** 
+## More plotting tasks {.tabset .tabset-fade}
+
+### More tasks {-}
 
 * Use a ggplot 'theme' to make your plot look more attractive 
 * Can you make each line (ID) a different type? 
-* Log transform the y-axis
-* Plot data for *just* <TT>ID==A</TT>
-* Plot each individual  
- 
+* Plot each individual on a separate plot using facet_wrap()
+
+### Solutions {-}
+
+* Use a ggplot 'theme' to make your plot look more attractive 
+* Can you make each line (ID) a different type? 
+* Plot each individual on a separate plot using facet_wrap()
+
+```{r theme_change,fig.width=4.5,fig.height=2.5,fig.align = 'center', fig.cap="Plot with new 'theme'"}
+ggplot(data=amox, aes(x=time, y=conc, group=ID))+ 
+  geom_point()+
+  xlab("Time (hours)")+
+  ylab("Concentration of amoxicillin mg/L")+
+  geom_line()+
+  theme_bw() # note there are other 'themes' start typing +theme_ and they will list
+```  
+```{r lty,fig.width=4.5,fig.height=2.5,fig.align = 'center', fig.cap="Plot with new 'theme'"}
+ggplot(data=amox, aes(x=time, y=conc, group=ID,linetype=ID))+ 
+  geom_point()+
+  xlab("Time (hours)")+
+  ylab("Concentration of amoxicillin mg/L")+
+  ggtitle("Amoxicillin PK data")+
+  geom_line()+
+  theme_bw() 
+```  
+```{r facet,fig.width=4.5,fig.height=2.5,fig.align = 'center', fig.cap="Facet plot for each ID"}
+ggplot(data=amox, aes(x=time, y=conc, group=ID))+ 
+  geom_point()+
+  xlab("Time (hours)")+
+  ylab("Concentration of amoxicillin mg/L")+
+  ggtitle("Amoxicillin PK data")+
+  geom_line()+
+  theme_bw() +
+  facet_wrap(facets='ID')
+```  
+# Extended learning {.tabset .tabset-fade}
+
+
+## Extended learning tasks {-}
+
+Use the following code to pull in a dataset from an oral study of the same drug
+
+* Plot the data
+* Summarise peak concentration data to give mean $C_{max}$
+
+_Hint: use the same code as before and change the data item from 'amox' to 'amox_oral"_
+
+``` {r,eval=FALSE, results='hold', tidy=FALSE}
+  
+amox_oral<- read.csv("https://raw.githubusercontent.com/dlonsdal/SGUL_PK_data/main/amoxicillin_oral.csv")
+
+```
+
+## Extended learning solutions {-}
+
+Use the following code to pull in a dataset from an oral study of the same drug
+
+* Plot the data
+* Summarise peak concentration data to give mean $C_{max}$
+
+```{r, message=FALSE, warning=FALSE, fig.cap="Plot of oral amoxicillin data"}
+amox_oral<- read.csv("https://raw.githubusercontent.com/dlonsdal/SGUL_PK_data/main/amoxicillin_oral.csv")
+
+amox_oral%>% # the only change to this bit of code from before is here. Just a simple copy-paste-edit
+  group_by(ID)%>%
+  summarise(CMax=max(conc)) 
+
+amox_oral%>% 
+  group_by(ID)%>%
+  summarise(CMax=max(conc))%>% 
+  summarise(mean_CMax=mean(CMax))
+
+ggplot(data=amox_oral, aes(x=time, y=conc, group=ID))+ 
+  geom_point()+
+  xlab("Time (hours)")+
+  ylab("Concentration of amoxicillin mg/L")+
+  geom_line()+
+  theme_bw() 
+```
+
+Note how R automatically scales the y-axis to have a max around the highest value in the dataset. This is important because if you compare the IV and oral data side by side and don't notice this it can sometimes look like both drugs have the same $C_{max}$.
+
+
+
+```{r, message=FALSE, warning=FALSE, echo= FALSE, fig.cap="IV (a) and Oral (b) data side by side"}
+
+iv<-ggplot(data=amox, aes(x=time, y=conc, group=ID))+ 
+  geom_point()+
+  xlab("Time (hours)")+
+  ylab("Concentration of amoxicillin mg/L")+
+  geom_line()+
+  theme_bw() 
+
+oral<-ggplot(data=amox_oral, aes(x=time, y=conc, group=ID))+ 
+  geom_point()+
+  xlab("Time (hours)")+
+  ylab("Concentration of amoxicillin mg/L")+
+  geom_line()+
+  theme_bw() 
+
+iv + oral + plot_annotation(tag_levels = 'a')
+
+```
+
+You can manually force the y-axis values to be the same.
+
+```{r,eval=FALSE}
+
+ggplot(data=amox, aes(x=time, y=conc, group=ID))+ 
+  geom_point()+
+  xlab("Time (hours)")+
+  ylab("Concentration of amoxicillin mg/L")+
+  geom_line()+
+  theme_bw()+
+  ylim(0,50)  
+
+ggplot(data=amox_oral, aes(x=time, y=conc, group=ID))+ 
+  geom_point()+
+  xlab("Time (hours)")+
+  ylab("Concentration of amoxicillin mg/L")+
+  geom_line()+
+  theme_bw()+
+  ylim(0,50) 
+
+``` 
+
+```{r, message=FALSE, warning=FALSE, echo=FALSE, fig.cap="IV (a) and Oral (b) data side by side with identical y-axis range"}
+
+iv<-ggplot(data=amox, aes(x=time, y=conc, group=ID))+ 
+  geom_point()+
+  xlab("Time (hours)")+
+  ylab("Concentration of amoxicillin mg/L")+
+  geom_line()+
+  theme_bw() 
+
+oral<-ggplot(data=amox_oral, aes(x=time, y=conc, group=ID))+ 
+  geom_point()+
+  xlab("Time (hours)")+
+  ylab("Concentration of amoxicillin mg/L")+
+  geom_line()+
+  theme_bw() 
+
+iv + oral + plot_annotation(tag_levels = 'a')+ylim(0,50)  
+```
+
