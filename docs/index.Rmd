@@ -1,5 +1,5 @@
 ---
-title: "Introduction to visualising pharmacokinetic data using '<TT>R</TT>'"
+title: "Introduction to visualising pharmacokinetic data using '`R`'"
 output:
   bookdown::html_document2:
     fig_caption : TRUE
@@ -47,34 +47,34 @@ library(kableExtra)
 
 # Introduction 
 
-In this session you will be introduced to the practical side of pharmacokinetics - with a data workshop. You will be introduced to '<TT>R</TT>': a language and environment for statistical computing and its partner programme 'RStudio', which provides a handy user interface for '<TT>R</TT>'.
+In this session you will be introduced to the practical side of pharmacokinetics - with a data workshop. You will be introduced to '`R`': a language and environment for statistical computing and its partner programme 'RStudio', which provides a handy user interface for '`R`'.
 
-We will use '<TT>R</TT>' to undertake visualisation of pharmacokinetic data using the '<TT>R</TT>' package '<TT>ggplot2</TT>'. We will use <TT>R</TT> to summarise some pharmacokinetic data to give us an important measure of exposure - the maximum drug concentration  ($C_{max}$).
+We will use '`R`' to undertake visualisation of pharmacokinetic data using the '`R`' package '`ggplot2`'. We will use `R` to summarise some pharmacokinetic data to give us an important measure of exposure - the maximum drug concentration  ($C_{max}$).
 
-This session has been designed to progress your knowledge of pharmacokinetics and give you an introduction into the world of using code to analyse, visualise and communicate with data - skills that the drug development industry consistently tell us they need from graduates. Although we are using <TT>R</TT> for pharmacokinetic data, the software can be used in any field of data analysis. Similarly, if you are already used to coding with another language (like <TT>Python</TT>), feel free to explore the data from this session using whichever language you prefer.
+This session has been designed to progress your knowledge of pharmacokinetics and give you an introduction into the world of using code to analyse, visualise and communicate with data - skills that the drug development industry consistently tell us they need from graduates. Although we are using `R` for pharmacokinetic data, the software can be used in any field of data analysis. Similarly, if you are already used to coding with another language (like `Python`), feel free to explore the data from this session using whichever language you prefer.
 
 ## Learning outcomes  
 
   
 * Define the important pharmacokinetic measures of drug exposure $C_{max}$, $T_{max}$, and $AUC$
-* Access <TT>R</TT> and <TT>RStudio</TT> onto your own computer or a University PC
-* Understand the different windows in the <TT>RStudio</TT> desktop
-* Make and save an  <TT>R</TT> script
-* Undertake some basic calculations using  <TT>R</TT>
-* Import a .csv data file into  <TT>R</TT> 
+* Access `R` and `RStudio` onto your own computer or a University PC
+* Understand the different windows in the `RStudio` desktop
+* Make and save an  `R` script
+* Undertake some basic calculations using  `R`
+* Import a .csv data file into  `R` 
 * View a data frame
 * Describe the difference between 'long' and 'wide' data formats and which is used for pharmacokinetic modelling
-* Download a package to your  <TT>R library</TT> 
-* Call a  <TT>package</TT> from the  <TT>R library</TT>
-* Plot some pharmacokinetic data using the  <TT>R</TT> package  <TT>ggplot2</TT>
+* Download a package to your  `R library` 
+* Call a  `package` from the  `R library`
+* Plot some pharmacokinetic data using the  `R` package  `ggplot2`
   + Change the aesthetics of plots 
-  + Use  <TT>ggplot2</TT> to transform axes and plot individual data using  <TT>facet_wrap()</TT>
-* Use  <TT>R</TT> to undertake basic, descriptive (non-compartmental) analysis of some pharmacokinetic data to 
+  + Use  `ggplot2` to transform axes and plot individual data using  `facet_wrap()`
+* Use  `R` to undertake basic, descriptive (non-compartmental) analysis of some pharmacokinetic data to 
     + Estimate $C_{max}$
 
 
 
-This document is designed to provide you with notes of the session and be a handy resource when you come to revision. There are examples of code and the corresponding output from <TT>R</TT> as we go along.  
+This document is designed to provide you with notes of the session and be a handy resource when you come to revision. There are examples of code and the corresponding output from `R` as we go along.  
 
 # Important pharmacokinetic measures of drug exposure 
 
@@ -268,15 +268,15 @@ plot_iv + plot_oral + plot_annotation(tag_levels = 'a')
 ```
 
 
-# Introducing <TT>R</TT> and <TT>RStudio</TT>
+# Introducing `R` and `RStudio`
 
-## Accessing <TT>R</TT> and <TT>RStudio</TT> on a University computer 
+## Accessing `R` and `RStudio` on a University computer 
 
-The two key tools for this session will be <TT>R</TT> and <TT>RStudio</TT>. These are free, open source pieces of software. They are both available on the University computers, but you may choose to download them onto your personal laptop or home computer.
+The two key tools for this session will be `R` and `RStudio`. These are free, open source pieces of software. They are both available on the University computers, but you may choose to download them onto your personal laptop or home computer.
 
-'<TT>R</TT>' is a language and environment for statistical computing. <TT>R</TT> is very powerful but it was not designed with the 'everyday' user in mind. '<TT>RStudio</TT>' is a user interface that makes using '<TT>R</TT>' far easier. You can think of the relationship between '<TT>R</TT>' and '<TT>RStudio</TT>' as similar to the relationship between the lines of code (<TT>R</TT>) running your computer that you do not see behind the user interface you use - MS Windows (<TT>RStudio</TT>) or as the relationship between equipment for an experiment (<TT>R</TT>) and the laboratory that houses it (<TT>RStudio</TT>). 
+'`R`' is a language and environment for statistical computing. `R` is very powerful but it was not designed with the 'everyday' user in mind. '`RStudio`' is a user interface that makes using '`R`' far easier. You can think of the relationship between '`R`' and '`RStudio`' as similar to the relationship between the lines of code (`R`) running your computer that you do not see behind the user interface you use - MS Windows (`RStudio`) or as the relationship between equipment for an experiment (`R`) and the laboratory that houses it (`RStudio`). 
 
-When you are using a University computer, you need to access <TT>RStudio</TT> via the University servers.
+When you are using a University computer, you need to access `RStudio` via the University servers.
 
 If you are *onsite*, you can use <https://shms-stats4.city.ac.uk/>. You will then need to login with your 'city.ac.uk' email address and password. 
 
@@ -289,10 +289,42 @@ A video with me showing you this (captioned) is below.
   <track src="captions.vtt" kind="captions" srclang="en" label="English" default>
 </video>
 
+## Introducting the `RStudio` environment
 
-## Some basics in <TT>R</TT> {.tabset .tabset-fade}
+When you first open `RStudio`, you will likely see *three* windows (or 'panes') as shown in Figure \@ref(fig:rstudio-3panes).
 
-Open <TT>RStudio</TT> and then open a new <TT>R</TT> script by clicking on the plus page in the top left hand corner of the <TT>RStudio</TT> window. You are now ready to start writing an <TT>R</TT> script. Try doing some simple maths and running the code by clicking '<TT>Run</TT>' or pressing <TT>ctrl+enter</TT> (<TT>cmd+enter if using a Mac</TT>).
+```{r rstudio-3panes, echo=FALSE, fig.cap="The default RStudio layout with three panes.", out.width="100%", fig.align='center'}
+knitr::include_graphics("rstudio_3panes.png")
+
+```
+
+Let's open the fourth and most important window.
+
+Go to the top menu and click **File > New File > R Script** (Figure \@ref(fig:rstudio-dropdown)). Alternatively, you can click the white paper icon with the green plus in the top left corner.
+
+```{r rstudio-dropdown, echo=FALSE, fig.cap="Opening a new R script from the File menu.", out.width="100%", fig.align='center'}
+knitr::include_graphics("rstudio_dropdown.png")
+
+```
+
+
+Your screen is now divided into four distinct panels (Figure \@ref(fig:rstudio-4panes)). It can look a bit overwhelming at first. If it helps, you can think of it like a scientific laboratory:
+
+```{r rstudio-4panes, echo=FALSE, fig.cap="The four main panes of the RStudio desktop interface, after opening a new R Script.", out.width="100%", fig.align='center'}
+# Note: Ensure you have an annotated screenshot named 'rstudio_4panes.png' saved in your working directory.
+knitr::include_graphics("rstudio_4panes.png")
+
+```
+
+* **Top-left: script editor (experiment plan).** This is the window you just opened. It is where you will spend most of your time typing, editing, and saving your code. Code written here isn't run until you tell it to (by clicking 'Run' or using `ctrl+enter` [`cmd+enter` on a Mac]). Just like an experimental plan, it gives exact, step-by-step instructions that you can write and then save, so your experiment can be perfectly reproduced later.
+* **Bottom-left: the console (your lab bench).** This is where the code actually runs—the place where your 'experiment' happens. When you execute a line from your script, it is sent down here. You will see your immediate results (and any error messages) appear in this window. You can type code directly into the console and hit enter, but just like doing an experiment without writing it down, it won't be saved for next time (so you won't be able to easily repeat it).
+* **Top-right: the environment (samples and reagents rack).** When you load a dataset (today it will be pharmacokinetic data) or calculate and save a new value, it will appear here. It shows you every dataset, variable, and object you currently have available in your computer's active memory, ready to be used in your analysis. A bit like getting all the reagents ready and then having a rack to store the final elements of your experiment.
+* **Bottom-right: files, plots, packages, and help (the lab toolkit and monitor).** This is a multi-purpose window. When we start visualising our pharmacokinetic data, the graphs will pop up in the 'Plots' tab like a read-out on a lab monitor. If you need to look up how a specific function works, the equipment manual will appear in the 'Help' tab.
+
+
+## Some basics in `R` {.tabset .tabset-fade}
+
+Try doing some simple maths and running the code by clicking '`Run`' or pressing `ctrl+enter` (`cmd+enter` if using a Mac).
 <br>
 
 ``` {r,eval=TRUE, tidy=FALSE }
@@ -354,11 +386,11 @@ A video with me showing you this is below.
 
 If you want to create a new folder to store your scripts and work in. You can create a new folder and save you script there, but you should ideally then change the 'working directory' to the folder you created (so that anything else you save also goes there). 
 
-You can either do that using the <TT>setwd()</TT> fuction or you can click 'Session' at the top of your screen then 'Set working directory' then 'to source file location'.
+You can either do that using the `setwd()` fuction or you can click 'Session' at the top of your screen then 'Set working directory' then 'to source file location'.
 
 # Import and inspect some pharmacokinetic data
 
-Let's get some PK data in to work with. I store all my data for learning on my GitHub pages. You can call this directly into <TT>R</TT> by running the following:
+Let's get some PK data in to work with. I store all my data for learning on my GitHub pages. You can call this directly into `R` by running the following:
 
 ``` {r,eval=TRUE, results='hold', tidy=FALSE}
   
@@ -369,11 +401,11 @@ amox<- read.csv("https://raw.githubusercontent.com/dlonsdal/SGUL_PK_data/main/am
 ## Inspect the data
 
 
-If you click on the arrow by the amox object in your environment tab in RStudio, you will see that 'amox' contains 30 observations of 3 variables. An <TT>ID</TT>  variable, <TT>time</TT>  which is an integer value and <TT>conc</TT>  which contains numbers.  
+If you click on the arrow by the amox object in your environment tab in RStudio, you will see that 'amox' contains 30 observations of 3 variables. An `ID`  variable, `time`  which is an integer value and `conc`  which contains numbers.  
 
 This data set is a simulated pharmacokinetic experiment. Six participants were give an IV bolus (given very fast) of 1000 mg of amoxicillin and plasma concentrations were measured every 2 hours for 8 hours. 8 hours is a standard dosing interval for amoxicillin.    
 
-There are some handy, built in <TT>R</TT> functions that you can use to have a look at the data.
+There are some handy, built in `R` functions that you can use to have a look at the data.
 
 ```{r, eval=TRUE}
 head(amox) # shows you the first 6 rows of the data frame
@@ -396,9 +428,9 @@ knitr::kable(amox,booktabs = TRUE, caption='Original amoxicillin data')%>%
   kable_styling(latex_options = "striped")
 ```
 
-It's pretty 'long' and unwieldy isnt it! Whilst this is not very easy for us to look at, believe it or not, it does make it quite easy for computer programs like <TT>R</TT> or <TT>MS Excel</TT> to analyse and manipulate. It's also the format data needs to be in to undertake pharmacokinetic analysis, so you will need to get used to formatting tables like this. In long form, each event for each ID has its own row. 
+It's pretty 'long' and unwieldy isnt it! Whilst this is not very easy for us to look at, believe it or not, it does make it quite easy for computer programs like `R` or `MS Excel` to analyse and manipulate. It's also the format data needs to be in to undertake pharmacokinetic analysis, so you will need to get used to formatting tables like this. In long form, each event for each ID has its own row. 
 
-If you want to look at data in another way, for example by Time or by ID you can use <TT>R</TT> to do this to rearrange the data. 
+If you want to look at data in another way, for example by Time or by ID you can use `R` to do this to rearrange the data. 
 
 ### Wide data  
 
@@ -420,17 +452,17 @@ amox %>%
 
 <br>
 
-Tables \@ref(tab:time)&\@ref(tab:ID) are examples of data in wide format. They are perhaps a little more intuitive to read, but they are not so easy for a program like <TT>R</TT> to manipulate.  
+Tables \@ref(tab:time)&\@ref(tab:ID) are examples of data in wide format. They are perhaps a little more intuitive to read, but they are not so easy for a program like `R` to manipulate.  
   
 ## Checking data for anomalies  
-One habit to get into when you are working with data is checking that the data for anomalies. This ensures that you have imported into <TT>R</TT> correctly and that there are no problems in the data base. In the setting of a study or trial, any anomalies you notice in a database should be raised as a 'data query'. 
+One habit to get into when you are working with data is checking that the data for anomalies. This ensures that you have imported into `R` correctly and that there are no problems in the data base. In the setting of a study or trial, any anomalies you notice in a database should be raised as a 'data query'. 
 
-There are lots of ways to check data. Where data frames are small, like  Tables \@ref(tab:time)&\@ref(tab:ID), you can inspect them visually and check that each participant has the right number of values and check that there are no obvious anomalies. Wide data frames may be easier to undertake visual inspections as you get one row per participant or sample time. Another common thing to do is to plot continuous variables and look for outliers, we will have a look at plotting data in the next section. <TT>R</TT> has some in built functions that can be helpful in checking data.  
+There are lots of ways to check data. Where data frames are small, like  Tables \@ref(tab:time)&\@ref(tab:ID), you can inspect them visually and check that each participant has the right number of values and check that there are no obvious anomalies. Wide data frames may be easier to undertake visual inspections as you get one row per participant or sample time. Another common thing to do is to plot continuous variables and look for outliers, we will have a look at plotting data in the next section. `R` has some in built functions that can be helpful in checking data.  
   
-### Using <TT>R</TT> to check for anomalies  
-There are lots of ways you can use <TT>R</TT> to check data. Here are a few ideas.  
+### Using `R` to check for anomalies  
+There are lots of ways you can use `R` to check data. Here are a few ideas.  
 
-#### <TT>summary()</TT> function 
+#### `summary()` function 
 
 ```{r}
 summary(amox)
@@ -438,17 +470,16 @@ summary(amox)
 
 <bc>
 
-Here, the three variables in the amoxicillin data set are summarised. It's a start, but we can do some more interesting things. To do this, we need to use one of the many available 'packages' that <TT>R</TT> has to offer. Packages are groups of functions (and some times datasets for you to use and learn with) that have been developed by the <TT>R</TT> community. Packages bring in new functions for us to use with our data. 
+Here, the three variables in the amoxicillin data set are summarised. It's a start, but we can do some more interesting things. To do this, we need to use one of the many available 'packages' that `R` has to offer. Packages are groups of functions (and some times datasets for you to use and learn with) that have been developed by the `R` community. Packages bring in new functions for us to use with our data. 
 
-# Calling a package from the <TT>R</TT> library
+# Calling a package from the `R` library
 
-<TT>R</TT> is a little bit like an empty laboratory. You can do _some_ useful things in it (like light a bunsen burner and heat something up) but if you want to do more advanced analytics you need to bring in some additional equipment (like an organ bath). In <TT>R</TT> these additional bits of kit are called 'packages'.
+`R` is a little bit like an empty laboratory. You can do _some_ useful things in it (like light a bunsen burner and heat something up) but if you want to do more advanced analytics you need to bring in some additional equipment (like an organ bath). In `R` these additional bits of kit are called 'packages'.
 
-I suggest you start by using  <TT>tidyverse</TT>, which is actually a selection of useful packages. When you want to use something like this, you have to call it from the <TT>R library</TT> of packages with the function <TT>library()</TT>. 
+I suggest you start by using  `tidyverse`, which is actually a selection of useful packages. When you want to use something like this, you have to call it from the `R library` of packages with the function `library()`. I have stored the packages you need for this course in a folder. You need to tell `R` where to find my folder by running the following code:`.libPaths(c(.libPaths(),"/homedirs8/shms/workshops/Dagan/"))`.  
 
-Please note, if you are undertaking this work on your own personal computer, you will need to download packages before you use them. This is done with the <TT>install.packages()</TT> function (e.g. <TT>install.packages('tidyverse')</TT>). If you are using <TT>RStudio</TT> on the server, I have downloaded all the packages that you need for this course, but you will have to tell <TT>R</TT> where to find them before you can call them with the <TT>library()</TT> function. To do this you will need to run the following code: <TT>.libPaths(c(.libPaths(),"/homedirs8/shms/workshops/Dagan/"))</TT>
+Copy and paste the following into your `R script` and run it:
 
-For example:  
 ```{r, eval=FALSE}
 .libPaths(c(.libPaths(),"/homedirs8/shms/workshops/Dagan/"))
 #note that you need the '.' before 'libPaths'
@@ -456,17 +487,21 @@ For example:
 library(tidyverse)
 ```
 
-**Note** that if you are using RStudio on the stats4 server you _can_ download packages yourself by using <TT>install.packages()</TT> but this process is quite slow so I recommend doing it in advance of sessions rather than during it. 
 
-# Summarising data with <TT>summarise()</TT> function, using piping <TT>%>%</TT> and estimating $C_{max}$
+**Notes** 
+If you are using `RStudio` on the stats4 server you _can_ download packages yourself by using `install.packages()` but this process is quite slow so I recommend doing it in advance of sessions rather than during it (or just using my folder). 
 
-We will use the <TT>summarise()</TT> function (note this is different from <TT>summary()</TT>). Stick <TT>summarise()</TT> into help in your <TT>RStudio</TT> help tab and look at the options that <TT>summarise()</TT> gives you. If you scroll down, you will see some 'useful functions' and, at the bottom, it gives you some examples of the function in use. You will see here that there are some funny '<TT>%>%</TT>' symbols. This is known as piping. 
+If you are undertaking this work on your own personal computer, you will need to download packages before you use them. This is done with the `install.packages()` function (e.g. `install.packages('tidyverse')`). 
+
+# Summarising data with `summarise()` function, using piping `%>%` and estimating $C_{max}$
+
+We will use the `summarise()` function (note this is different from `summary()`). Stick `summarise()` into help in your `RStudio` help tab and look at the options that `summarise()` gives you. If you scroll down, you will see some 'useful functions' and, at the bottom, it gives you some examples of the function in use. You will see here that there are some funny '`%>%`' symbols. This is known as piping. 
 
 Piping is a tool that allows us to undertake multiple logical steps to achieve a desired output in our text. It effectively means 'and then'. 
 
-Technically, <TT>%>%</TT> is found in the <TT>magrittr()</TT> package, but when you load <TT>tidyverse()</TT> , <TT>magrittr()</TT> is automatically loaded.  
+Technically, `%>%` is found in the `magrittr()` package, but when you load `tidyverse()` , `magrittr()` is automatically loaded.  
 
-Let's say we wanted to check the maximum concentration in our dataset made sense, to check for outliers. If we apply <TT>summarise(amox,max(conc))</TT> we are given `r summarise(amox,max(conc))%>% pull()`. This is the same output as from <TT>summary()</TT>, above. What if we want to know the maximum concentration for each ID number. Well, we can do this with piping.
+Let's say we wanted to check the maximum concentration in our dataset made sense, to check for outliers. If we apply `summarise(amox,max(conc))` we are given `r summarise(amox,max(conc))%>% pull()`. This is the same output as from `summary()`, above. What if we want to know the maximum concentration for each ID number. Well, we can do this with piping.
 
 ```{r, echo=FALSE}
 library(tidyverse)
@@ -481,7 +516,7 @@ amox%>%
 # here we tell R to take the dataset amox 'and then' (the piping, %>% command) return the maximum value of the conc variable
 ```
 
-You can see that by default <TT>R</TT> labels this new value with the command used to create it (max(conc)). We can change the label for this new value:
+You can see that by default `R` labels this new value with the command used to create it (max(conc)). We can change the label for this new value:
 
 ```{r, results='hold', message=FALSE, warning=FALSE}
 
@@ -500,7 +535,7 @@ amox%>%
 # the new variable is called 'CMax'
 ```
 
-Now you can see the maximum value for each ID. In pharmacokinetics, the maximum value is known as $C_{max}$. This is an important pharmacokinetic parameter as sometimes, $C_{max}$, the peak drug concentration, influences effect (either desired or adverse). We can build our <TT>summarise()</TT> function to be a bit more powerful. For example we can also pull out $C_{min}$ (the minimum observed concentration) at the same time:
+Now you can see the maximum value for each ID. In pharmacokinetics, the maximum value is known as $C_{max}$. This is an important pharmacokinetic parameter as sometimes, $C_{max}$, the peak drug concentration, influences effect (either desired or adverse). We can build our `summarise()` function to be a bit more powerful. For example we can also pull out $C_{min}$ (the minimum observed concentration) at the same time:
 
 ```{r, results='hold', message=FALSE, warning=FALSE}
 amox%>%
@@ -541,13 +576,13 @@ amox%>%
   
 
 # Plotting data   
-OK. Now to have some fun with data visualisation. You are used to clicking with a user interface in excel or SPSS. I am going to show you how make plots with  <TT>R</TT> code. Why bother? Well, you can make awesome, customisable plot code and then when you have a new data set, you just copy and paste the code, change the variables and hey presto, rapid plotting without having to point and click.  
+OK. Now to have some fun with data visualisation. You are used to clicking with a user interface in excel or SPSS. I am going to show you how make plots with  `R` code. Why bother? Well, you can make awesome, customisable plot code and then when you have a new data set, you just copy and paste the code, change the variables and hey presto, rapid plotting without having to point and click.  
   
-## Plotting with <TT>ggplot2</TT>
+## Plotting with `ggplot2`
   
-We are going to plot with <TT>ggplot2</TT>. This is a powerful graphics framework that is extensively used by the <TT>R</TT> community - meaning there is lots of help out there! With <TT>ggplot2</TT>, we build a plot in stages, using different commands. <TT>ggplot2</TT> is loaded from the <TT>library()</TT> when you call <TT>tidyverse()</TT>. If you wanted to work with just <TT>ggplot2</TT> at some other time then call it from the library with <TT>library(ggplot2)</TT>.  
+We are going to plot with `ggplot2`. This is a powerful graphics framework that is extensively used by the `R` community - meaning there is lots of help out there! With `ggplot2`, we build a plot in stages, using different commands. `ggplot2` is loaded from the `library()` when you call `tidyverse()`. If you wanted to work with just `ggplot2` at some other time then call it from the library with `library(ggplot2)`.  
 
-First of all we initialise <TT>ggplot2</TT> with <TT>ggplot2(data= , aes(x= , y=))</TT>. Hopefully it is self explanatory what we will put in the <TT>data=</TT>, <TT>x=</TT> and <TT>y=</TT> positions. Then we have to tell <TT>ggplot2</TT> what kind of plot we want. Here is an example:  
+First of all we initialise `ggplot2` with `ggplot2(data= , aes(x= , y=))`. Hopefully it is self explanatory what we will put in the `data=`, `x=` and `y=` positions. Then we have to tell `ggplot2` what kind of plot we want. Here is an example:  
 
 ```{r,echo=FALSE}
 
@@ -584,7 +619,7 @@ ggplot(data=amox, aes(x=time, y=conc))+
   geom_line()
 ```
 
-Mmmmm, the labels work fine but the line is a bit odd! Why is this? Well, ggplot has to be told exactly what to do, we have told it to draw a line, so it has drawn a line connecting all data points. What we really want to do is draw lines by <TT>ID</TT>. To do this we tell <TT>ggplot2()</TT> to group the data.  
+Mmmmm, the labels work fine but the line is a bit odd! Why is this? Well, ggplot has to be told exactly what to do, we have told it to draw a line, so it has drawn a line connecting all data points. What we really want to do is draw lines by `ID`. To do this we tell `ggplot2()` to group the data.  
   
 ```{r lineok,fig.width=4.5,fig.height=2.5,fig.align = 'center', fig.cap="Simple scatter plot with lines between data points for each ID"}
 ggplot(data=amox, aes(x=time, y=conc, group=ID))+ #note the group goes up here
