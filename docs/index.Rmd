@@ -1,5 +1,5 @@
 ---
-title: "Introduction to visualising pharmacokinetic data using '`R`'"
+title: "Introduction to visualising pharmacokinetic data using `R`"
 output:
   bookdown::html_document2:
     fig_caption : TRUE
@@ -47,9 +47,9 @@ library(kableExtra)
 
 # Introduction 
 
-In this session you will be introduced to the practical side of pharmacokinetics - with a data workshop. You will be introduced to '`R`': a language and environment for statistical computing and its partner programme 'RStudio', which provides a handy user interface for '`R`'.
+In this session you will be introduced to the practical side of pharmacokinetics - with a data workshop. You will be introduced to '`R`': a language and environment for statistical computing and its partner programme '`RStudio`', which provides a handy user interface for `R`.
 
-We will use '`R`' to undertake visualisation of pharmacokinetic data using the '`R`' package '`ggplot2`'. We will use `R` to summarise some pharmacokinetic data to give us an important measure of exposure - the maximum drug concentration  ($C_{max}$).
+We will use `R` to undertake visualisation of pharmacokinetic data using the `R` package '`ggplot2`'. We will use `R` to summarise some pharmacokinetic data to give us an important measure of exposure - the maximum drug concentration  ($C_{max}$).
 
 This session has been designed to progress your knowledge of pharmacokinetics and give you an introduction into the world of using code to analyse, visualise and communicate with data - skills that the drug development industry consistently tell us they need from graduates. Although we are using `R` for pharmacokinetic data, the software can be used in any field of data analysis. Similarly, if you are already used to coding with another language (like `Python`), feel free to explore the data from this session using whichever language you prefer.
 
@@ -274,7 +274,7 @@ plot_iv + plot_oral + plot_annotation(tag_levels = 'a')
 
 The two key tools for this session will be `R` and `RStudio`. These are free, open source pieces of software. They are both available on the University computers, but you may choose to download them onto your personal laptop or home computer.
 
-'`R`' is a language and environment for statistical computing. `R` is very powerful but it was not designed with the 'everyday' user in mind. '`RStudio`' is a user interface that makes using '`R`' far easier. You can think of the relationship between '`R`' and '`RStudio`' as similar to the relationship between the lines of code (`R`) running your computer that you do not see behind the user interface you use - MS Windows (`RStudio`) or as the relationship between equipment for an experiment (`R`) and the laboratory that houses it (`RStudio`). 
+`R` is a language and environment for statistical computing. `R` is very powerful but it was not designed with the 'everyday' user in mind. `RStudio` is a user interface that makes using `R` far easier. You can think of the relationship between `R` and `RStudio` as similar to the relationship between the lines of code (`R`) running your computer that you do not see behind the user interface you use - MS Windows (`RStudio`) or as the relationship between equipment for an experiment (`R`) and the laboratory that houses it (`RStudio`). 
 
 When you are using a University computer, you need to access `RStudio` via the University servers.
 
@@ -302,7 +302,7 @@ Let's open the fourth and most important window.
 
 Go to the top menu and click **File > New File > R Script** (Figure \@ref(fig:rstudio-dropdown)). Alternatively, you can click the white paper icon with the green plus in the top left corner.
 
-```{r rstudio-dropdown, echo=FALSE, fig.cap="Opening a new R script from the File menu.", out.width="100%", fig.align='center'}
+```{r rstudio-dropdown, echo=FALSE, fig.cap="Opening a new R script.", out.width="100%", fig.align='center'}
 knitr::include_graphics("rstudio_dropdown.png")
 
 ```
@@ -373,8 +373,7 @@ b^3 # takes the cube of each number in the vector
 
 The reason that you write all of your code in a 'script' is so that you can come back to it and re-use it (and/or edit it and/or copy bits of it for another project). 
 
-To save an R-script, click on the save icon and save your file. **You must save is as a '.r' file**. For example 'year1session1.r'. Video of me doing this is below. 
-
+To save an R-script, click on the save icon and save your file. **You must save is as a '.r' file**. For example 'year1session1.r'. 
 
 A video with me showing you this is below.
 
